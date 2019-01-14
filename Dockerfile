@@ -9,7 +9,8 @@ RUN yarn global add bs-platform --prefix /usr/local
 RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
 
-COPY package.json /usr/src/app/package.json
+COPY package.json ./package.json
+COPY bsconfig.json ./bsconfig.json
 RUN yarn install
 
 COPY ./src ./src
