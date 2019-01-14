@@ -1,24 +1,24 @@
-FROM node:6
+FROM node:10
 
 RUN set -ex
 
 RUN mkdir ~/.npm-global
 RUN PATH=~/.npm-global/bin:$PATH
-RUN npm install -g bs-platform
+RUN yarn global add bs-platform --prefix /usr/local
 
 RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app/package.json
-RUN npm install
+RUN yarn install
 
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
-RUN npm install react-scripts@1.1.1 -g
+RUN yarn global add react-scripts@1.1.1  --prefix /usr/local/
 
 WORKDIR /usr/src/app/public/
 COPY ./public/index.html ./index.html
 RUN pwd
 RUN ls
 
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
