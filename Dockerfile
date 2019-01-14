@@ -12,6 +12,8 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app/package.json
 RUN yarn install
 
+COPY ./src ./src
+
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
 RUN yarn global add react-scripts@1.1.1  --prefix /usr/local/
