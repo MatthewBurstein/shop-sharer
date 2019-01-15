@@ -19,9 +19,7 @@ ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
 RUN yarn global add react-scripts@1.1.1  --prefix /usr/local/
 
-WORKDIR /usr/src/app/public/
-COPY ./public/index.html ./index.html
-RUN pwd
-RUN ls
+WORKDIR /usr/src/app/
+COPY ./public ./public
 
 CMD ["yarn", "start"]
