@@ -8,10 +8,9 @@ services:
       context: ./web
       dockerfile: Dockerfile
     volumes:
-      - 'node-cache:/root/.npm'
-      - 'node-cache:/usr/src/app/node_modules'
-      - 'bs-cache:/usr/local/lib'
-      - ${PWD}/web:/web
+#       - 'node-cache:/root/.npm'
+#       - 'bs-cache:/usr/local/lib'
+      - ${PWD}/web:/usr/src/app
     ports:
       - '3000:3000'
       - '35729:35729'
