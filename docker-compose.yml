@@ -15,8 +15,8 @@ services:
     ports:
       - '3000:3000'
       - '35729:35729'
-    environment:
-      - NODE_ENV=development
+    env_file:
+      - .web.env
 
 volumes:
   node-cache:
