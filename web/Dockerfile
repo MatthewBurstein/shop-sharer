@@ -21,4 +21,6 @@ COPY public/ ./public/
 
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
-CMD ["yarn", "start"]
+COPY docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
+ENTRYPOINT ["./docker-entrypoint.sh"]
