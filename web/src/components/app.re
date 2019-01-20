@@ -8,11 +8,16 @@ let elementArrayOfList = (listOfThings) => ReasonReact.array(Array.of_list(listO
 type item = {
   name: string,
   quantity: int
-};
+}
+
+let newItem = ({name, quantity}): item => {name, quantity}
 
 type state = {
   items: list(item)
 };
+
+type action = 
+  | NewItem(item)
 
 let component = ReasonReact.reducerComponent("App");
 
@@ -24,12 +29,17 @@ let make = (_children) => {
       {name: "Toothepaste", quantity: 3}
       ]
   },
-  reducer: ((), _) => ReasonReact.NoUpdate,
-  render: ({state: {items}}) =>
+  reducer: (action, state) => switch action {
+    | NewItem(formState) => ReasonReact.Update({items:[newItem(formState), ...state.items]})
+  },
+  render: ({state, send}) => {
+    let { items } = state;
     <div className="App">
-      <NewItemForm />
+      <NewItemForm submit={formState => send(NewItem(formState))}/>
+
       {elementArrayOfList(List.map((item) => {
         <ItemCard itemName=item.name quantity=item.quantity/>
       }, items))}
-    </div>,
+    </div>
+  }
 };
