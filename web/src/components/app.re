@@ -27,6 +27,7 @@ let make = (_children) => {
   reducer: ((), _) => ReasonReact.NoUpdate,
   render: ({state: {items}}) =>
     <div className="App">
+      <NewItemForm />
       {elementArrayOfList(List.map((item) => {
         <ItemCard itemName=item.name quantity=item.quantity/>
       }, items))}
