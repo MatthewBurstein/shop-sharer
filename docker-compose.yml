@@ -8,15 +8,9 @@ services:
       context: ./web
       dockerfile: Dockerfile
     volumes:
-#       - 'node-cache:/root/.npm'
-#       - 'bs-cache:/usr/local/lib'
-      - ${PWD}/web:/usr/src/app
+      - ./web/src:/usr/src/app/src
     ports:
       - '3000:3000'
       - '35729:35729'
     env_file:
       - .web.env
-
-volumes:
-  node-cache:
-  bs-cache:

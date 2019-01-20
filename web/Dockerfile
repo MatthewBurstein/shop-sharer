@@ -1,25 +1,24 @@
-FROM node:10
+FROM node:11.4
 
 RUN set -ex
 
-RUN mkdir ~/.npm-global
-RUN PATH=~/.npm-global/bin:$PATH
-RUN yarn global add bs-platform --prefix /usr/local
+# Add bs-platform path to PATH and install
+RUN PATH=/usr/local/bin:$PATH
+RUN yarn global add bs-platform
+
 
 RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
 
+# Copy packge files into app and install
 COPY package.json ./package.json
 COPY bsconfig.json ./bsconfig.json
+COPY yarn.lock ./yarn.lock
 RUN yarn install
 
-COPY ./src ./src
+# Copy public files into container
+COPY public/ ./public/
 
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
-
-RUN yarn global add react-scripts@1.1.1  --prefix /usr/local/
-
-WORKDIR /usr/src/app/
-COPY ./public ./public
 
 CMD ["yarn", "start"]
