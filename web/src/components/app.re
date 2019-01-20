@@ -1,4 +1,4 @@
-[%bs.raw {|require('./app.css')|}];
+[%bs.raw {|require('../assets/stylesheets/app.css')|}];
 
 [@bs.module] external logo : string = "./logo.svg";
 
