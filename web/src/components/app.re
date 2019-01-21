@@ -2,15 +2,10 @@
 
 [@bs.module] external logo : string = "./logo.svg";
 
+open DataModel;
+
 let str = ReasonReact.string;
 let elementArrayOfList = (listOfThings) => ReasonReact.array(Array.of_list(listOfThings))
-
-type item = {
-  name: string,
-  quantity: int
-}
-
-let newItem = ({name, quantity}): item => {name, quantity}
 
 type state = {
   items: list(item)
@@ -30,16 +25,16 @@ let make = (_children) => {
       ]
   },
   reducer: (action, state) => switch action {
-    | NewItem(formState) => ReasonReact.Update({items:[newItem(formState), ...state.items]})
+    | NewItem(newItem) => ReasonReact.Update({items:[newItem, ...state.items]})
   },
   render: ({state, send}) => {
     let { items } = state;
     <div className="App">
-      <NewItemForm submit={formState => send(NewItem(formState))}/>
+      <NewItemForm submit=(newItem => send(NewItem(newItem)) )/>
 
-      {elementArrayOfList(List.map((item) => {
-        <ItemCard itemName=item.name quantity=item.quantity/>
+      {elementArrayOfList(List.mapi((idx, item) => {
+        <ItemCard key=string_of_int(idx) itemName=item.name quantity=item.quantity/>
       }, items))}
     </div>
   }
-};
+}
