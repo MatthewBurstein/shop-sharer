@@ -9,6 +9,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./web/src:/usr/src/app/src
+      - web_node_modules:/usr/src/app/node_modules
     ports:
       - '3000:3000'
       - '35729:35729'
@@ -22,5 +23,10 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./web/src:/usr/src/app/src
+      - server_node_modules:/usr/src/app/node_modules
     ports:
       - '5000:5000'
+
+volumes:
+  server_node_modules:
+  web_node_modules:
