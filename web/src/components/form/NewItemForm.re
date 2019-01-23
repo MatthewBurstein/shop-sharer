@@ -19,7 +19,7 @@ let make = (~submit, _children) => {
     | EditQuantity(value) => ReasonReact.Update({...state, quantity: int_of_string(value)})
     }
   },
-  render: ({handle, send, state}) => {
+  render: ({send, state}) => {
     let {name, quantity} = state;
     let submitHelper = (event) => {
       ReactEvent.Mouse.preventDefault(event); 

@@ -14,3 +14,13 @@ services:
       - '35729:35729'
     env_file:
       - .web.env
+
+  server:
+    container_name: server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - ./web/src:/usr/src/app/src
+    ports:
+      - '5000:5000'
