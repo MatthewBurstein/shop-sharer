@@ -30,7 +30,7 @@ let make = (_children) => {
   render: ({state, send}) => {
     let { items } = state;
     <div className="App">
-      <NewItemForm submit=(newItem => send(NewItem(newItem)) )/>
+      <NewItemForm submit=(newItem => send(NewItem(newItem)))/>
 
       {elementArrayOfList(List.mapi((idx, item) => {
         <ItemCard key=string_of_int(idx) itemName=item.name quantity=item.quantity/>
