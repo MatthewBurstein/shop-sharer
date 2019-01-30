@@ -1,17 +1,19 @@
 open DataModel
 
 module Decode {
-  let items = json => {
-
+  let items = json: DataModel.item => {
+    Json.Decode.{
+      name: json |> field("name", string),
+      quantity: json |> field("quantity", int)
+    }
   }
 }
 
 let fetchItems = (send) => {
   Js.Promise.(
-    Fetch.fetch("https://server:5000")
+    Fetch.fetch("http://localhost:5000/items/")
       |> then_(Fetch.Response.json)
       |> then_(json => {
-        Js.log(json);
         json
           |> Decode.items
           |> (items => Js.log(items)/*send(App.ItemsFetched(items))*/)
