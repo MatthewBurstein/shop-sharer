@@ -22,7 +22,7 @@ services:
       context: ./server
       dockerfile: Dockerfile
     volumes:
-      - ./web/src:/usr/src/app/src
+      - ./server/src:/usr/src/app/src
       - server_node_modules:/usr/src/app/node_modules
     ports:
       - '5000:5000'
