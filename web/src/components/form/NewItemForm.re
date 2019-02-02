@@ -2,48 +2,45 @@ open DataModel;
 
 type action =
   | EditName(string)
-  | EditQuantity(string)
+  | EditQuantity(string);
 
 let component = ReasonReact.reducerComponent("NewItemForm");
 
-
 let make = (~submit, _children) => {
   ...component,
-  initialState: () => {
-    name: "",
-    quantity: 0
-  },
-  reducer: (action, state) => {
-    switch(action) {
+  initialState: () => {name: "", quantity: 0},
+  reducer: (action, state) =>
+    switch (action) {
     | EditName(value) => ReasonReact.Update({...state, name: value})
-    | EditQuantity(value) => ReasonReact.Update({...state, quantity: int_of_string(value)})
-    }
-  },
+    | EditQuantity(value) =>
+      ReasonReact.Update({...state, quantity: int_of_string(value)})
+    },
   render: ({send, state}) => {
     let {name, quantity} = state;
-    let submitHelper = (event) => {
-      ReactEvent.Mouse.preventDefault(event); 
+    let submitHelper = event => {
+      ReactEvent.Mouse.preventDefault(event);
       submit(state);
     };
     <div className="item-card">
       <form>
-        <input 
+        <input
           value=name
-          onChange = {
+          onChange={
             event => send(EditName(ReactEvent.Form.target(event)##value))
           }
         />
-        <input 
+        <input
           type_="number"
-          value=string_of_int(quantity) 
-          onChange = {
-            event => send(EditQuantity(ReactEvent.Form.target(event)##value))
+          value={string_of_int(quantity)}
+          onChange={
+            event =>
+              send(EditQuantity(ReactEvent.Form.target(event)##value))
           }
         />
         <button onClick={event => submitHelper(event)}>
           {ReasonReact.string("Submit")}
         </button>
-      </ form>
-    </div>
-  }
-}
+      </form>
+    </div>;
+  },
+};

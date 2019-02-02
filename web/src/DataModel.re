@@ -1,4 +1,4 @@
 type item = {
   name: string,
-  quantity: int
-}
+  quantity: int,
+};
