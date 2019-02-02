@@ -26,7 +26,18 @@ services:
       - server_node_modules:/usr/src/app/node_modules
     ports:
       - '5000:5000'
+    
+  db:
+    container_name: db
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    volumes:
+      - db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 
 volumes:
   server_node_modules:
   web_node_modules:
+  db:
