@@ -1,27 +1,26 @@
 open DataModel
 
 module Decode {
-  let items = json: DataModel.item => {
+  let item = itemJson: DataModel.item => {
     Json.Decode.{
-      name: json |> field("name", string),
-      quantity: json |> field("quantity", int)
+      name: itemJson |> field("name", string),
+      quantity: itemJson |> field("quantity", int)
     }
+  }
+
+  let arrayItems = json => {
+    Json.Decode.list(item, json)
   }
 }
 
-let fetchItems = (send) => {
+let fetchItems = () => {
   Js.Promise.(
     Fetch.fetch("http://localhost:5000/items/")
       |> then_(Fetch.Response.json)
       |> then_(json => {
-        json
-          |> Decode.items
-          |> (items => Js.log(items)/*send(App.ItemsFetched(items))*/)
-          |> resolve
+        Decode.arrayItems(json)
+        |> items => Some(items) |> resolve
       })
-      |> catch(_err =>
-        Js.Promise.resolve(/*send(ItemsFailedToFetch)*/)
-      )
-      |> ignore
+      |> catch(_err => resolve(None))
   )
 }

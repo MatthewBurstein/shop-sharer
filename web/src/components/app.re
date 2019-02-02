@@ -1,44 +1,71 @@
 [%bs.raw {|require('../assets/stylesheets/app.css')|}];
 
-[@bs.module] external logo : string = "./logo.svg";
-
 open DataModel;
 open ApiClient;
 
 let str = ReasonReact.string;
 let elementArrayOfList = (listOfThings) => ReasonReact.array(Array.of_list(listOfThings))
 
-type state = {
-  items: list(item)
-};
+type state =
+  | Loading
+  | Loaded(list(item))
+
+let getItems = currentState => {
+  switch currentState {
+    | Loading => []
+    | Loaded(items) => items
+  }
+}
 
 type action = 
   | NewItem(item)
+  | LoadItems
+  | NewItems(list(item))
+  | LoadItemsFailed
 
 let component = ReasonReact.reducerComponent("App");
 
+let getItems = currentState => {
+  switch currentState {
+    | Loading => []
+    | Loaded(items) => items
+  }
+}
+
 let make = (_children) => {
   ...component,
-  initialState: () => {
-    items: [
-      {name: "Baked beans", quantity: 1}, 
-      {name: "Toothepaste", quantity: 3}
-      ]
-  },
+  initialState: () => { Loaded([]) },
   didMount: ({state, send}) => {
-    fetchItems(send)
+    send(LoadItems)
   },
   reducer: (action, state) => switch action {
-    | NewItem(newItem) => ReasonReact.Update({items:[newItem, ...state.items]})
+    | NewItem(newItem) => ReasonReact.Update(Loaded([newItem, ...getItems(state)]))
+    | NewItems(newItems) => ReasonReact.Update(Loaded(List.concat([newItems, getItems(state)])))
+    | LoadItems => ReasonReact.UpdateWithSideEffects(
+      Loading,
+      self => Js.Promise.(
+        fetchItems()
+        |> then_(result =>
+          switch(result) {
+            | Some(items) => resolve(self.send(NewItems(items)))
+            | None => resolve(self.send(LoadItemsFailed))
+          }
+        )
+        |> ignore
+      )
+    )
   },
   render: ({state, send}) => {
-    let { items } = state;
-    <div className="App">
-      <NewItemForm submit=(newItem => send(NewItem(newItem)))/>
-
-      {elementArrayOfList(List.mapi((idx, item) => {
-        <ItemCard key=string_of_int(idx) itemName=item.name quantity=item.quantity/>
-      }, items))}
-    </div>
+    switch state {
+    | Loading =>  <p>{ReasonReact.string("loading")}</p>
+    | Loaded(items) => {
+      <div className="App">
+        <NewItemForm submit=(newItem => send(NewItem(newItem)))/>
+        {elementArrayOfList(List.mapi((idx, item) => {
+          <ItemCard key=string_of_int(idx) itemName=item.name quantity=item.quantity/>
+        }, items))}
+      </div>
+    }
   }
+}
 }
