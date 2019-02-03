@@ -10,12 +10,12 @@
   },
   "name": "shop-sharer-server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "devDependencies": {
     "nodemon": "^1.18.9"
   },
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon app.js"
   },
   "author": "",
   "license": "ISC",

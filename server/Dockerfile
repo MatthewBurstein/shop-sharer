@@ -11,7 +11,8 @@ COPY yarn.lock ./yarn.lock
 RUN yarn install
 
 # Copy public files into container
-COPY index.js ./index.js
+COPY app.js ./app.js
+COPY src/ ./src
 
 COPY docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh
