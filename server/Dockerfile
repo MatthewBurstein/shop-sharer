@@ -11,8 +11,7 @@ WORKDIR /usr/src/app
 
 
 # Copy packge files into app and install
-COPY package.json ./package.json
-COPY yarn.lock ./yarn.lock
+COPY ./ ./
 RUN yarn install
 
 # Copy public files into container
