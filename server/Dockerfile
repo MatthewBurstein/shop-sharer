@@ -2,8 +2,13 @@ FROM node:11.4
 
 RUN set -ex
 
+#install sequelize cli to be able to run commands on the container
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+RUN yarn global add sequelize-cli
+
 RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
+
 
 # Copy packge files into app and install
 COPY package.json ./package.json
