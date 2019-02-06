@@ -12,6 +12,8 @@ WORKDIR /usr/src/app
 
 # Copy packge files into app and install
 COPY ./ ./
+# Copy .sequelizerc - why doesn't this happen above?
+COPY .sequelizerc ./.sequelizerc
 RUN yarn install
 
 # Copy public files into container
