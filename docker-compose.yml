@@ -8,7 +8,7 @@ services:
       context: ./web
       dockerfile: Dockerfile
     volumes:
-      - ./web/src:/usr/src/app/src
+      - ./web:/usr/src/app
       - web_node_modules:/usr/src/app/node_modules
     ports:
       - '3000:3000'
@@ -22,7 +22,7 @@ services:
       context: ./server
       dockerfile: Dockerfile
     volumes:
-      - ./server/src:/usr/src/app/src
+      - ./server:/usr/src/app
       - server_node_modules:/usr/src/app/node_modules
     ports:
       - '5000:5000'
@@ -36,6 +36,8 @@ services:
       - db:/var/lib/postgresql/data
     ports:
       - 5432:5432
+    env_file:
+      - ./db/.db.env
 
 volumes:
   server_node_modules:
