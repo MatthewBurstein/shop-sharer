@@ -9,9 +9,8 @@ let elementArrayOfList = listOfThings =>
 
 type state =
   | Loading
-  | Loaded(list(item))
+  | Loaded(list(itemType))
   | LoadItemsFailed;
-
 
 let getItemsFromState = currentState =>
   switch (currentState) {
@@ -21,10 +20,11 @@ let getItemsFromState = currentState =>
   };
 
 type action =
-  | NewItem(item)
+  | NewItem(itemType)
   | LoadItems
-  | NewItems(list(item))
-  | LoadItemsFailed;
+  | NewItems(list(itemType))
+  | LoadItemsFailed
+  | PostItem(itemType);
 
 let component = ReasonReact.reducerComponent("App");
 
@@ -44,7 +44,9 @@ let make = _children => {
     | NewItem(newItem) =>
       ReasonReact.Update(Loaded([newItem, ...getItemsFromState(state)]))
     | NewItems(newItems) =>
-      ReasonReact.Update(Loaded(List.concat([newItems, getItemsFromState(state)])))
+      ReasonReact.Update(
+        Loaded(List.concat([newItems, getItemsFromState(state)])),
+      )
     | LoadItems =>
       ReasonReact.UpdateWithSideEffects(
         Loading,
@@ -63,6 +65,18 @@ let make = _children => {
         ),
       )
     | LoadItemsFailed => ReasonReact.NoUpdate
+    | PostItem(item) => ReasonReact.UpdateWithSideEffects(
+      Loading,
+      (self => Js.Promise.(
+        postItem(item)
+        |> then_(result =>{
+          Js.log(result);
+          resolve(self.send(NewItem(item)))
+        }
+        )
+        |> ignore
+      ))
+    )
     },
   render: ({state, send}) =>
     switch (state) {
@@ -70,7 +84,7 @@ let make = _children => {
     | LoadItemsFailed => <h1> {ReasonReact.string("Load failed :(")} </h1>
     | Loaded(items) =>
       <div className="App">
-        <NewItemForm submit=(newItem => send(NewItem(newItem))) />
+        <NewItemForm submit=(newItem => send(PostItem(newItem))) />
         {
           elementArrayOfList(
             List.mapi(

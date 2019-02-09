@@ -1,4 +1,4 @@
-type item = {
+type itemType = {
   name: string,
   quantity: int,
 };
