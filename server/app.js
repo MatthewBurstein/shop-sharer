@@ -19,11 +19,10 @@ app.get('/items', (req, res) => {
   dbClient.getAllItems()
   .then(items => Promise.resolve(
     items.map(item => {
-      return { item: item.name, quantity: item.quantity }
+      return { name: item.name, quantity: item.quantity }
     })
   ))
   .then(result => {
-    console.log(result);
     res.json(result);
   })
 })

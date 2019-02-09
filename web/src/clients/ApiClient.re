@@ -17,5 +17,5 @@ let fetchItems = () =>
     |> then_(json =>
          Decode.arrayItems(json) |> (items => Some(items) |> resolve)
        )
-    |> catch(_err => resolve(None))
+    |> catch(_err => {Js.log(_err); resolve(None)})
   );

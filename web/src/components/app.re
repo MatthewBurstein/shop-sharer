@@ -9,12 +9,15 @@ let elementArrayOfList = listOfThings =>
 
 type state =
   | Loading
-  | Loaded(list(item));
+  | Loaded(list(item))
+  | LoadItemsFailed;
+
 
 let getItemsFromState = currentState =>
   switch (currentState) {
   | Loading => []
   | Loaded(items) => items
+  | LoadItemsFailed => []
   };
 
 type action =
@@ -29,6 +32,7 @@ let getItems = currentState =>
   switch (currentState) {
   | Loading => []
   | Loaded(items) => items
+  | LoadItemsFailed => []
   };
 
 let make = _children => {
@@ -58,10 +62,12 @@ let make = _children => {
             )
         ),
       )
+    | LoadItemsFailed => ReasonReact.NoUpdate
     },
   render: ({state, send}) =>
     switch (state) {
     | Loading => <h1> {ReasonReact.string("Loading...")} </h1>
+    | LoadItemsFailed => <h1> {ReasonReact.string("Load failed :(")} </h1>
     | Loaded(items) =>
       <div className="App">
         <NewItemForm submit=(newItem => send(NewItem(newItem))) />
