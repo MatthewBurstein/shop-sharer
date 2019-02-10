@@ -11,12 +11,14 @@
   },
   "name": "shop-sharer-server",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "./app.js",
   "devDependencies": {
+    "eslint": "^5.13.0",
     "nodemon": "^1.18.9"
   },
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "lint": "./node_modules/.bin/eslint ./src"
   },
   "author": "",
   "license": "ISC",
