@@ -1,23 +1,24 @@
-const router = require('express').Router();
+const router = require("express").Router()
 const dbClient = require("./db/dbClient")
 
 router.route("/items")
-  .get((req, res) => {
+  .get((_, res) => {
     dbClient.getAllItems()
-    .then(items => Promise.resolve(
-      items.map(item => {
-        return { name: item.name, quantity: item.quantity }
+      .then(items => Promise.resolve(
+        items.map(item => {
+          return { name: item.name, quantity: item.quantity }
+        })
+      ))    
+      .then(result => {
+        res.json(result)
       })
-    ))    
-    .then(result => {
-      res.json(result);
-    })
   })
 
   .post((req, res) => {
-    console.log('in post')
-    console.log(req)
-    // dbClient.saveItem()
+    dbClient.saveItem(req.body)
+      .then(item => {
+        res.json(item)
+      })
   })
 
-module.exports = router;
+module.exports = router
