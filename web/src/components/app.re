@@ -20,20 +20,13 @@ let getItemsFromState = currentState =>
   };
 
 type action =
-  | NewItem(itemType)
+  | AddItem(itemType)
   | LoadItems
-  | NewItems(list(itemType))
+  | AddItems(list(itemType))
   | LoadItemsFailed
   | PostItem(itemType);
 
 let component = ReasonReact.reducerComponent("App");
-
-let getItems = currentState =>
-  switch (currentState) {
-  | Loading => []
-  | Loaded(items) => items
-  | LoadItemsFailed => []
-  };
 
 let make = _children => {
   ...component,
@@ -41,9 +34,12 @@ let make = _children => {
   didMount: ({state, send}) => send(LoadItems),
   reducer: (action, state) =>
     switch (action) {
-    | NewItem(newItem) =>
-      ReasonReact.Update(Loaded([newItem, ...getItemsFromState(state)]))
-    | NewItems(newItems) =>
+    | AddItem(newItem) =>
+      Js.log(state);
+      ReasonReact.Update(
+        Loaded(List.concat([getItemsFromState(state), [newItem]])),
+      );
+    | AddItems(newItems) =>
       ReasonReact.Update(
         Loaded(List.concat([newItems, getItemsFromState(state)])),
       )
@@ -56,7 +52,7 @@ let make = _children => {
               fetchItems()
               |> then_(result =>
                    switch (result) {
-                   | Some(items) => resolve(self.send(NewItems(items)))
+                   | Some(items) => resolve(self.send(AddItems(items)))
                    | None => resolve(self.send(LoadItemsFailed))
                    }
                  )
@@ -65,18 +61,22 @@ let make = _children => {
         ),
       )
     | LoadItemsFailed => ReasonReact.NoUpdate
-    | PostItem(item) => ReasonReact.UpdateWithSideEffects(
-      Loading,
-      (self => Js.Promise.(
-        postItem(item)
-        |> then_(result =>{
-          Js.log(result);
-          resolve(self.send(NewItem(item)))
-        }
-        )
-        |> ignore
-      ))
-    )
+    | PostItem(item) =>
+      ReasonReact.SideEffects(
+        (
+          self =>
+            Js.Promise.(
+              postItem(item)
+              |> then_(result =>
+                   switch (result) {
+                   | Some(item) => resolve(self.send(AddItem(item)))
+                   | None => resolve(self.send(LoadItemsFailed))
+                   }
+                 )
+              |> ignore
+            )
+        ),
+      )
     },
   render: ({state, send}) =>
     switch (state) {

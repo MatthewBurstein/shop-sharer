@@ -1,7 +1,10 @@
-const db = require("./models/index");
+const db = require("./models/index")
 
 module.exports = {
-  getAllItems: function()  {
-    return db.Item.findAll()
-  }
+	getAllItems: () => {
+		return db.Item.findAll()
+	},
+	saveItem: (item) => {
+		return db.Item.create(item)
+	}
 }

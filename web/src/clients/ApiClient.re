@@ -1,6 +1,6 @@
 open DataModel;
 
-let apiAddress = "http://localhost:5000/"
+let apiAddress = "http://localhost:5000/";
 
 module Decode = {
   let item = itemJson: DataModel.itemType =>
@@ -52,9 +52,7 @@ let postItem = item => {
       ),
     )
     |> then_(Fetch.Response.json)
-    |> then_(json =>
-      Decode.arrayItems(json) |> (items => Some(items) |> resolve)
-    )
+    |> then_(json => Decode.item(json) |> (item => Some(item) |> resolve))
     |> catch(_err => {
          Js.log(_err);
          resolve(None);
