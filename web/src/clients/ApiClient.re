@@ -24,12 +24,6 @@ module Encode = {
     );
     payload;
   };
-
-  let id = idToEncode => {
-    let payload = Js.Dict.empty();
-    Js.Dict.set(payload, "id", Js.Json.string(string_of_int(idToEncode)));
-    payload;
-  };
 };
 
 let fetchItems = () =>
@@ -68,14 +62,11 @@ let postItem = item => {
 };
 
 let deleteItemById = id => {
-  let payload = Encode.id(id);
   Js.Promise.(
     Fetch.fetchWithInit(
       apiAddress ++ "items/" ++ string_of_int(id),
       Fetch.RequestInit.make(
         ~method_=Delete,
-        ~body=
-          Fetch.BodyInit.make(Js.Json.stringify(Js.Json.object_(payload))),
         ~headers=Fetch.HeadersInit.make({"Content-Type": "application/json"}),
         (),
       ),
