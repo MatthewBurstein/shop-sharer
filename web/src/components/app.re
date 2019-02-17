@@ -6,6 +6,9 @@ open ApiClient;
 let str = ReasonReact.string;
 let elementArrayOfList = listOfThings =>
   ReasonReact.array(Array.of_list(listOfThings));
+let removeItemById = (id, items) => {
+  List.filter(item => item.id != id, items)
+}
 
 type state =
   | Loading
@@ -14,9 +17,8 @@ type state =
 
 let getItemsFromState = currentState =>
   switch (currentState) {
-  | Loading => []
   | Loaded(items) => items
-  | LoadItemsFailed => []
+  | _ => []
   };
 
 type action =
@@ -52,7 +54,7 @@ let make = _children => {
           self =>
             Js.Promise.(
               fetchItems()
-              |> then_(result =>
+              |> then_(result => 
                    switch (result) {
                    | Some(items) => resolve(self.send(AddItems(items)))
                    | None => resolve(self.send(LoadItemsFailed))
@@ -79,6 +81,18 @@ let make = _children => {
             )
         ),
       )
+    | RemoveItem(id) => ReasonReact.Update(Loaded(removeItemById(id, getItemsFromState(state))))
+    | DeleteItem(id) => ReasonReact.SideEffects(
+        (
+          self =>
+            Js.Promise.(
+              deleteItemById(id)
+              |> then_(response => resolve(self.send(RemoveItem(id)))
+            )
+            |> ignore
+        ),
+      ) 
+    )
     },
   render: ({state, send}) =>
     switch (state) {

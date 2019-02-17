@@ -66,3 +66,20 @@ let postItem = item => {
        })
   );
 };
+
+let deleteItemById = id => {
+  let payload = Encode.id(id);
+  Js.Promise.(
+    Fetch.fetchWithInit(
+      apiAddress ++ "items/" ++ string_of_int(id),
+      Fetch.RequestInit.make(
+        ~method_ = Delete,
+        ~body=
+          Fetch.BodyInit.make(Js.Json.stringify(Js.Json.object_(payload))),
+        ~headers=Fetch.HeadersInit.make({"Content-Type": "application/json"}),
+        (),
+      ),
+    )
+    |> then_(response => Js.Promise.resolve(Fetch.Response.status(response)))
+    )
+}
