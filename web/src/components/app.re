@@ -38,10 +38,9 @@ let make = _children => {
   reducer: (action, state) =>
     switch (action) {
     | AddItem(newItem) =>
-      Js.log(state);
       ReasonReact.Update(
         Loaded(List.concat([getItemsFromState(state), [newItem]])),
-      );
+      )
     | AddItems(newItems) =>
       ReasonReact.Update(
         Loaded(List.concat([newItems, getItemsFromState(state)])),
@@ -90,7 +89,14 @@ let make = _children => {
           self =>
             Js.Promise.(
               deleteItemById(id)
-              |> then_(response => resolve(self.send(RemoveItem(id))))
+              |> then_(response =>
+                   response ?
+                     resolve(self.send(RemoveItem(id))) :
+                     {
+                       Js.log("delete failed");
+                       resolve();
+                     }
+                 )
               |> ignore
             )
         ),
@@ -105,9 +111,10 @@ let make = _children => {
         <NewItemForm submit=(newItem => send(PostItem(newItem))) />
         {
           elementArrayOfList(
-            List.map(
-              item =>
+            List.mapi(
+              (idx, item) =>
                 <ItemCard
+                  key={string_of_int(idx)}
                   handleDelete={id => send(DeleteItem(id))}
                   id={item.id}
                   itemName={item.name}

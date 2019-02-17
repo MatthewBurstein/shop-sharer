@@ -80,6 +80,6 @@ let deleteItemById = id => {
         (),
       ),
     )
-    |> then_(response => Js.Promise.resolve(Fetch.Response.status(response)))
+    |> then_(response => Js.Promise.resolve(Fetch.Response.ok(response)))
   );
 };
