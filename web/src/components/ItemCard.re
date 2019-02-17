@@ -1,6 +1,6 @@
 let component = ReasonReact.statelessComponent("ItemCard");
 
-let make = (~itemName, ~quantity, _children) => {
+let make = (~itemName, ~quantity, ~handleDelete, ~id, _children) => {
   ...component,
   render: _self =>
     <div className="item-card">

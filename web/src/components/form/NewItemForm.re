@@ -8,7 +8,7 @@ let component = ReasonReact.reducerComponent("NewItemForm");
 
 let make = (~submit, _children) => {
   ...component,
-  initialState: () => {name: "", quantity: 0},
+  initialState: () => {name: "", quantity: 0, id: 0},
   reducer: (action, state) =>
     switch (action) {
     | EditName(value) => ReasonReact.Update({...state, name: value})

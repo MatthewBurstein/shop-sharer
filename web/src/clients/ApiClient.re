@@ -7,6 +7,7 @@ module Decode = {
     Json.Decode.{
       name: itemJson |> field("name", string),
       quantity: itemJson |> field("quantity", int),
+      id: itemJson |> field("id", int)
     };
 
   let arrayItems = json => Json.Decode.list(item, json);
@@ -23,15 +24,21 @@ module Encode = {
     );
     payload;
   };
+
+  let id = idToEncode => {
+    let payload = Js.Dict.empty();
+    Js.Dict.set(payload, "id", Js.Json.string(string_of_int(idToEncode)));
+    payload;  
+  }
 };
 
 let fetchItems = () =>
   Js.Promise.(
     Fetch.fetch(apiAddress ++ "items/")
     |> then_(Fetch.Response.json)
-    |> then_(json =>
-         Decode.arrayItems(json) |> (items => Some(items) |> resolve)
-       )
+    |> then_(json => 
+      Decode.arrayItems(json) |> (items => Some(items) |> resolve)
+    )
     |> catch(_err => {
          Js.log(_err);
          resolve(None);

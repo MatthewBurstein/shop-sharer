@@ -6,7 +6,7 @@ router.route("/items")
     dbClient.getAllItems()
       .then(items => Promise.resolve(
         items.map(item => {
-          return { name: item.name, quantity: item.quantity }
+          return { id: item.id, name: item.name, quantity: item.quantity }
         })
       ))    
       .then(result => {

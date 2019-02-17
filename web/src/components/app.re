@@ -24,7 +24,9 @@ type action =
   | LoadItems
   | AddItems(list(itemType))
   | LoadItemsFailed
-  | PostItem(itemType);
+  | PostItem(itemType)
+  | DeleteItem(int)
+  | RemoveItem(int);
 
 let component = ReasonReact.reducerComponent("App");
 
@@ -87,10 +89,11 @@ let make = _children => {
         <NewItemForm submit=(newItem => send(PostItem(newItem))) />
         {
           elementArrayOfList(
-            List.mapi(
-              (idx, item) =>
+            List.map(
+              item =>
                 <ItemCard
-                  key={string_of_int(idx)}
+                  handleDelete={id => send(DeleteItem(id))}
+                  id={item.id}
                   itemName={item.name}
                   quantity={item.quantity}
                 />,
