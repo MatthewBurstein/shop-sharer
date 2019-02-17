@@ -7,7 +7,7 @@ module Decode = {
     Json.Decode.{
       name: itemJson |> field("name", string),
       quantity: itemJson |> field("quantity", int),
-      id: itemJson |> field("id", int)
+      id: itemJson |> field("id", int),
     };
 
   let arrayItems = json => Json.Decode.list(item, json);
@@ -28,17 +28,17 @@ module Encode = {
   let id = idToEncode => {
     let payload = Js.Dict.empty();
     Js.Dict.set(payload, "id", Js.Json.string(string_of_int(idToEncode)));
-    payload;  
-  }
+    payload;
+  };
 };
 
 let fetchItems = () =>
   Js.Promise.(
     Fetch.fetch(apiAddress ++ "items/")
     |> then_(Fetch.Response.json)
-    |> then_(json => 
-      Decode.arrayItems(json) |> (items => Some(items) |> resolve)
-    )
+    |> then_(json =>
+         Decode.arrayItems(json) |> (items => Some(items) |> resolve)
+       )
     |> catch(_err => {
          Js.log(_err);
          resolve(None);
@@ -73,7 +73,7 @@ let deleteItemById = id => {
     Fetch.fetchWithInit(
       apiAddress ++ "items/" ++ string_of_int(id),
       Fetch.RequestInit.make(
-        ~method_ = Delete,
+        ~method_=Delete,
         ~body=
           Fetch.BodyInit.make(Js.Json.stringify(Js.Json.object_(payload))),
         ~headers=Fetch.HeadersInit.make({"Content-Type": "application/json"}),
@@ -81,5 +81,5 @@ let deleteItemById = id => {
       ),
     )
     |> then_(response => Js.Promise.resolve(Fetch.Response.status(response)))
-    )
-}
+  );
+};
