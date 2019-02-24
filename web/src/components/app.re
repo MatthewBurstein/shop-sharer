@@ -109,21 +109,7 @@ let make = _children => {
     | Loaded(items) =>
       <div className="App">
         <NewItemForm submit=(newItem => send(PostItem(newItem))) />
-        {
-          elementArrayOfList(
-            List.mapi(
-              (idx, item) =>
-                <ItemCard
-                  key={string_of_int(idx)}
-                  handleDelete={id => send(DeleteItem(id))}
-                  id={item.id}
-                  itemName={item.name}
-                  quantity={item.quantity}
-                />,
-              items,
-            ),
-          )
-        }
+        <CurrentListContainer items=items handleDelete={id => send(DeleteItem(id))}/>
       </div>
     },
 };
