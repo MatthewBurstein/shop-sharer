@@ -108,8 +108,9 @@ let make = _children => {
     | LoadItemsFailed => <h1> {ReasonReact.string("Load failed :(")} </h1>
     | Loaded(items) =>
       <div className="App">
-        <NewItemForm submit=(newItem => send(PostItem(newItem))) />
-        <CurrentListContainer items=items handleDelete={id => send(DeleteItem(id))}/>
+        <CurrentListContainer items=items handleDelete={id => send(DeleteItem(id))}>
+          <NewItemForm submit=(newItem => send(PostItem(newItem)))/>
+        </CurrentListContainer>
       </div>
     },
 };

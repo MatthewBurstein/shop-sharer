@@ -8,7 +8,7 @@ let elementArrayOfList = listOfThings =>
 let make = (~items, ~handleDelete, _children) => {
   ...component,
   render: _self => {
-    <div className="current-list-container">
+    <div className="current-list-container">  
       {
           elementArrayOfList(
             List.mapi(
