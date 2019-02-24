@@ -21,9 +21,9 @@ router.route("/items")
       })
   })
 
-  router.route("/items/:itemId")
-    .delete((req, res) => {
-      dbClient.destroyItem(req.params.itemId)
+router.route("/items/:itemId")
+  .delete((req, res) => {
+    dbClient.destroyItem(req.params.itemId)
       .then(() => {
         res.status(204).send()
       })

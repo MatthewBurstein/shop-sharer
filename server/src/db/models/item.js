@@ -4,8 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     quantity: DataTypes.INTEGER
   }, {})
+  
   Item.associate = function(models) {
-    // associations can be defined here
+    Item.belongsToMany(models.ShoppingList, { through: "ShoppingListItem" })
   }
+
   return Item
 }
